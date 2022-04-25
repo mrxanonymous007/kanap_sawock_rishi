@@ -1,29 +1,40 @@
+fillSection();
 
-// répartition des données récuperer par l'api et affichage dans le dom
+    function fillSection() {
+        fetch("http://localhost:3000/api/products").then(function(response){
+            
+            if (response.ok) {
+                return response.json(); 
+            }
+            })
+            .then(function(responses){
+            console.log(responses)
+            
+            // .catch(function(error){
+            // });
+            
+            for (let i = 0; i < responses.length; i++) {
 
-    // var result = await getArticles ()
-    // console.log(result)
-    // .then(function (resultatAPI){
-    //     const articles = resultatAPI;
-    //     console.table(articles);
-    //     for (let article in articles) {
+                let productLink = document.createElement("a");
+                let article = document.createElement("article");
+                let images = document.createElement("img");
+                let title = document.createElement('h3');
+                let p = document.createElement('p');
 
-    //         // Insertion de l'élément "a"
-    //         let productLink = document.createElement("a");
-    //         document.querySelector(".items").appendChild(productLink);
-    //         productLink.href = `product.html?id=${resultatAPI[article]._id}`;
-    //     }
-    // })
-    // .catch (function(error){
-    //     console.log(error);
-    //     return error;
-    // });
+                document.querySelector(".items").appendChild(productLink);
+                productLink.appendChild(article);
+                article.appendChild(images);
+                article.appendChild(title);
+                article.appendChild(p);
+                
+                productLink.href = "./product.html?id=" + responses[i]["_id"];
+                images.src = responses[i]['imageUrl'];
+                images.alt = responses[i]['altTxt'];
+                title.className = "productName";
+                title.innerHTML = responses[i]["name"]
+                p.className = "productDescription";
+                p.innerHTML = responses[i]['description'];
+            }
 
-    fetch("http://localhost:3000/api/products").then(response =>{
-        console.log(response);
-        if(response.ok){
-            console.log(response.json()); //first consume it in console.log
-            console.log(response.body);
-            return response.json(); //then consume it again, the error happens
-        }
-});
+        });
+    }
