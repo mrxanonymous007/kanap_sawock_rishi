@@ -36,7 +36,20 @@ articleProduct();
                 titleArticle.innerHTML = responses[i]['name'];
                 priceArticle.innerHTML = responses[i]['price'];
                 descriptionArticle.innerHTML = responses[i]['description'];
+
+                
+                let select = document.getElementById('colors');
+                // console.log(select);
+                // console.log(responses[i].colors);
+                
+                responses[i].colors.forEach((colors) => {
+                    let selectOptions = document.createElement('option');
+                    selectOptions.innerHTML = colors;
+                    selectOptions.value = colors;
+                    select.appendChild(selectOptions);
+                });
             }
+
         }
     });
     }
