@@ -1,4 +1,4 @@
-fetch("http://localhost:3000/api/product")
+fetch("http://localhost:3000/api/products")
 
     .then(function (response) {
         //ici on formate la réponse, càd on récupère du JSON
@@ -25,7 +25,7 @@ fetch("http://localhost:3000/api/product")
 
                     let articleElem = document.createElement('article');
                     aElem.appendChild(articleElem);
-                    // console.log(articleElem);
+                    
 
                     let imgElem = document.createElement('img');
                     imgElem.src = data[i].imageUrl;
@@ -66,6 +66,6 @@ fetch("http://localhost:3000/api/product")
 
         classTitles.appendChild(pElemerr);
         pElemerr.appendChild(pMsg);
-        
+
         document.querySelector('p').style.textAlign = 'center';
     });
