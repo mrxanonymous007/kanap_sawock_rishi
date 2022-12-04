@@ -1,40 +1,71 @@
-fillSection();
+fetch("http://localhost:3000/api/product")
 
-    function fillSection() {
-        fetch("http://localhost:3000/api/products").then(function(response){
-            
-            if (response.ok) {
-                return response.json(); 
-            }
-            })
-            .then(function(responses){
-            console.log(responses)
-            
-            // .catch(function(error){
-            // });
-            
-            for (let i = 0; i < responses.length; i++) {
+    .then(function (response) {
+        //ici on formate la réponse, càd on récupère du JSON
+        return response.json()
 
-                let productLink = document.createElement("a");
-                let article = document.createElement("article");
-                let images = document.createElement("img");
-                let title = document.createElement('h3');
-                let p = document.createElement('p');
+            .then(function (data) {
+                //renvoie d'une nouvelle promesse, on récupère le résultat de la promesse du dessus
+                console.log(data);
 
-                document.querySelector(".items").appendChild(productLink);
-                productLink.appendChild(article);
-                article.appendChild(images);
-                article.appendChild(title);
-                article.appendChild(p);
-                
-                productLink.href = "./product.html?id=" + responses[i]["_id"];
-                images.src = responses[i]['imageUrl'];
-                images.alt = responses[i]['altTxt'];
-                title.className = "productName";
-                title.innerHTML = responses[i]["name"]
-                p.className = "productDescription";
-                p.innerHTML = responses[i]['description'];
-            }
+                //mettre une boucle for avec incrémentation +1
+                for (let i = 0; i < data.length; i++) {
 
-        });
-    }
+                    let itemsSection = document.querySelector('.items');
+                    console.log(itemsSection);
+
+                    
+                    let aElem = document.createElement('a');
+                    aElem.href = './product.html?id=' + data[i]._id;
+
+
+                    /*RATTACHEMENT DE a À section*/
+                    itemsSection.appendChild(aElem);
+
+
+                    let articleElem = document.createElement('article');
+                    aElem.appendChild(articleElem);
+                    // console.log(articleElem);
+
+                    let imgElem = document.createElement('img');
+                    imgElem.src = data[i].imageUrl;
+                    imgElem.alt = data[i].altTxt;
+
+
+                    /*RATTACHEMENT DE img À article*/
+                    articleElem.appendChild(imgElem);
+
+                    
+                    let h3Elem = document.createElement('h3');
+                    h3Elem.classList.add('productName');
+                    h3Elem.innerHTML = data[i].name;
+
+
+                    /*RATTACHEMENT DE h3 À article*/
+                    articleElem.appendChild(h3Elem);
+
+
+                    let pElem = document.createElement('p');
+                    pElem.classList.add('productDescription');
+                    pElem.innerHTML = data[i].description;
+
+
+                    /*RATTACHEMENT DE p À article*/
+                    articleElem.appendChild(pElem);
+                }
+            });
+
+    }).catch(function (err) {
+        //si par exemple node server pas n'est allumé ou refus de connexion, avec l'api un message d'erreur s'affiche en console
+       alert('Erreur: ' + err);
+
+        err = 'Oups... Veuillez réessayer plus tard !';
+        let classTitles = document.querySelector('.titles');
+        let pElemerr = document.createElement('p');
+        let pMsg = document.createTextNode(err);
+
+        classTitles.appendChild(pElemerr);
+        pElemerr.appendChild(pMsg);
+        
+        document.querySelector('p').style.textAlign = 'center';
+    });
