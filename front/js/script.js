@@ -6,7 +6,7 @@ fetch("http://localhost:3000/api/products")
 
             .then(function (data) {
                 //renvoie d'une nouvelle promesse, on récupère le résultat de la promesse du dessus
-                console.log(data);
+                // console.log(data);
 
                 //mettre une boucle for avec incrémentation +1
                 for (let i = 0; i < data.length; i++) {
@@ -62,10 +62,10 @@ fetch("http://localhost:3000/api/products")
         err = 'Oups... Veuillez réessayer plus tard !';
         let classTitles = document.querySelector('.titles');
         let pElemerr = document.createElement('p');
-        let pMsg = document.createTextNode(err);
+        let pTxt = document.createTextNode(err);
 
         classTitles.appendChild(pElemerr);
-        pElemerr.appendChild(pMsg);
+        pElemerr.appendChild(pTxt);
 
         document.querySelector('p').style.textAlign = 'center';
     });
