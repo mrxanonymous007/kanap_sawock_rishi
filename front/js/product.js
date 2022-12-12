@@ -10,9 +10,9 @@ fetch("http://localhost:3000/api/products")
         return response.json()
         .then(function(data){
             
-            for(let i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 
-                if(url == data[i]._id){
+                if (url == data[i]._id) {
 
                     //affichage d'une image unique du produit
                     let recupClassImg = document.querySelector('.item__img');
@@ -64,18 +64,22 @@ fetch("http://localhost:3000/api/products")
                             let idCart = url;
                             let quantityCart = document.getElementById('quantity').value;
 
-                            //condition pour vérifier si les couleurs et/ou la quantité est compris entre 1-100
-                            if(valueCart == '') {
+                            /*condition pour vérifier si les couleurs et/ou la quantité est compris entre 1-100
+                            si vrai stockage des infos en local*/
+
+                            if (valueCart == '' && quantityCart == 0) {
+                                alert ('Veuillez choisir une couleur et renseigner une quantité !');
+                            }else if (valueCart == '') {
                                 alert('Veuillez choisir une couleur !');
-                            }else if(quantityCart <= 0 || quantityCart >= 101) {
+                            }else if (quantityCart <= 0 || quantityCart >= 101) {
                                 alert('Veuillez renseigner une quantité comprise entre 1 et 100 !');
                             }else {
                                 localStorage.setItem('color', valueCart); 
                                 localStorage.setItem('id', idCart);
                                 localStorage.setItem('quantity', quantityCart);
-                            };                  
-                    });
-                };
-            };
+                            }
+                        });
+                }
+            }
         });
     });
