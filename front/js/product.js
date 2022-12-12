@@ -82,4 +82,17 @@ fetch("http://localhost:3000/api/products")
                 }
             }
         });
+    }).catch(function (err) {
+        //si api éteint ou refus de connexion une boîte de dialogue apparaît avec un message d'erreur
+       alert('Erreur: ' + err);
+
+        err = 'Oups... Veuillez réessayer plus tard !';
+        let classTitles = document.querySelector('.titles');
+        let pElemerr = document.createElement('p');
+        let pTxt = document.createTextNode(err);
+
+        classTitles.appendChild(pElemerr);
+        pElemerr.appendChild(pTxt);
+
+        document.querySelector('p').style.textAlign = 'center';
     });
