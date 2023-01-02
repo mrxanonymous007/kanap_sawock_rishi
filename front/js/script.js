@@ -1,12 +1,12 @@
 fetch("http://localhost:3000/api/products")
 
-    .then(function (response) {
+    .then (function (response) {
         //ici on formate la réponse, càd on récupère du JSON
         return response.json()
 
-            .then(function (data) {
+            .then (function (data) {
                 //renvoie d'une nouvelle promesse, on récupère le résultat de la promesse du dessus
-
+                // console.log(data);
                 //mettre une boucle for avec incrémentation +1
                 for (let i = 0; i < data.length; i++) {
 
@@ -42,7 +42,7 @@ fetch("http://localhost:3000/api/products")
                 }
             });
 
-    }).catch(function (err) {
+    }).catch (function (err) {
         //si api éteint ou refus de connexion une boîte de dialogue apparaît avec un message d'erreur
        alert('Erreur: ' + err);
 
