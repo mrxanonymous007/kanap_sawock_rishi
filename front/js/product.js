@@ -68,17 +68,16 @@ fetch('http://localhost:3000/api/products')
                             } else if (quantityCart <= 0 || quantityCart >= 101) {
                                 alert('Veuillez renseigner une quantité comprise entre 1 et 100 !');
                             } else {
+
                                 //ajout du produit dans le tableau "dynamique" -> cart
                                 if (localStorage.getItem('panier')) {
                                     let cart = JSON.parse(localStorage.getItem('panier'));
-
                                     //produit sous forme d'objet avec id, quantité, color
                                     let productLs = {
                                         id: idCart,
                                         quantity: Number(quantityCart),
                                         color: valueCart
                                     };
-
                                     let addNewItem = true;
                                     for (let produit of cart) {
                                         if (productLs.id == produit.id && productLs.color == produit.color) {
@@ -89,20 +88,20 @@ fetch('http://localhost:3000/api/products')
                                     if (addNewItem == true) {
                                         cart.push(productLs);
                                     };
-
                                     let stringifyEmptyArray = localStorage.setItem('panier', JSON.stringify(cart));
 
+
+
                                 } else {
+
                                     //tableau vide par défaut
                                     let cart = [];
-
                                     //produit sous forme d'objet avec id, quantité, color
                                     let productLs = {
                                         id: idCart,
                                         quantity: Number(quantityCart),
                                         color: valueCart
                                     };
-
                                     let addNewItem = true;
                                     for (let produit of cart) {
                                         if (productLs.id == produit.id && productLs.color == produit.color) {
@@ -113,7 +112,6 @@ fetch('http://localhost:3000/api/products')
                                     if (addNewItem == true) {
                                         cart.push(productLs);
                                     };
-
                                     let stringifyEmptyArray = localStorage.setItem('panier', JSON.stringify(cart));
                                 }
                             }
