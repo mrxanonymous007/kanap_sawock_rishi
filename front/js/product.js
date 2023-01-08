@@ -53,7 +53,6 @@ fetch('http://localhost:3000/api/products')
                         //au clic sur le bouton 'ajouter au panier', redirection vers cart.html dans un nouvel onglet
                         let btnOnClick = document.querySelector('#addToCart');
                         btnOnClick.addEventListener('click', () => {
-                            window.location.href = 'cart.html';
                             let select = document.querySelector('#colors');
                             let valueCart = select.options[select.selectedIndex].value;
                             let idCart = data[i]._id;
@@ -71,11 +70,12 @@ fetch('http://localhost:3000/api/products')
 
                                 //ajout du produit dans le tableau "dynamique" -> cart
                                 if (localStorage.getItem('panier')) {
+                                    window.location.href = 'cart.html';
                                     let cart = JSON.parse(localStorage.getItem('panier'));
                                     //produit sous forme d'objet avec id, quantité, color
                                     let productLs = {
                                         id: idCart,
-                                        quantity: Number(quantityCart),
+                                        quantity: quantityCart,
                                         color: valueCart
                                     };
                                     let addNewItem = true;
@@ -93,13 +93,13 @@ fetch('http://localhost:3000/api/products')
 
 
                                 } else {
-
+                                    window.location.href = 'cart.html';
                                     //tableau vide par défaut
                                     let cart = [];
                                     //produit sous forme d'objet avec id, quantité, color
                                     let productLs = {
                                         id: idCart,
-                                        quantity: Number(quantityCart),
+                                        quantity: quantityCart,
                                         color: valueCart
                                     };
                                     let addNewItem = true;

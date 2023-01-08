@@ -85,9 +85,57 @@ fetch('http://localhost:3000/api/products')
                             divCartItemContentSettings.appendChild(divCartItemContentSettingsDelete);
                             divCartItemContentSettingsDelete.appendChild(pTextDelete);
 
+                            let totalQuantity = document.querySelector('#totalQuantity');
+                            totalQuantity.innerHTML = Number(produit.quantity);
+
+                            let totalPrice = document.querySelector('#totalPrice');
+                            totalPrice.innerHTML = data[i].price * Number(produit.quantity);
                         }
                     }
+                }
 
+                //suppression d'un article unique sur la page panier
+                let articleFromDom = document.getElementsByClassName('cart__item');
+                let cart = JSON.parse(localStorage.getItem('panier'));
+
+                for (let articleProduct of articleFromDom) {
+                    articleProduct.addEventListener('click', (e) => {
+                        let targetArticle = e.currentTarget;
+                        let dataId = targetArticle.dataset.id;
+                        let colorId = targetArticle.dataset.color;
+                        let btnSuppClick = e.target.classList.contains('deleteItem');
+
+                        if (btnSuppClick) {
+                            cart = cart.filter(p => p.color != colorId || p.id != dataId)
+                            localStorage.setItem('panier', JSON.stringify(cart));
+                            window.location.reload();
+                        }
+
+                        //si tableau vide (avec crochet présent), suppression complète du localstorage
+                        if (cart.length == '') {
+                            localStorage.removeItem('panier');
+                        }
+                    });
+                }
+
+                //modification de la quantité, prix total, quantité total
+
+                let getInput = document.querySelectorAll('.itemQuantity');
+                for (let inputUpdateQuantity of getInput) {
+                    inputUpdateQuantity.addEventListener('change', (e) => {
+
+                        let targetE = e.target;
+                        let dataId = targetE.closest('.cart__item').getAttribute('data-id');
+                        let dataColor = targetE.closest('.cart__item').getAttribute('data-color');
+
+                        for (let p of cart) {
+                            if (p.id == dataId && p.color == dataColor) {
+                                p.quantity = inputUpdateQuantity.value;
+                                localStorage.setItem('panier', JSON.stringify(cart));
+                                window.location.reload();
+                            }
+                        }
+                    });
                 }
             });
     }).catch(function (msgPanierVide) {
