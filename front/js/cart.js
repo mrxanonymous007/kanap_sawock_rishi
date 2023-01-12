@@ -64,6 +64,7 @@ fetch('http://localhost:3000/api/products')
                             divCartItemContentSettingsQuantity.classList.add('cart__item__content__settings__quantity');
                             divCartItemContentSettings.appendChild(divCartItemContentSettingsQuantity);
 
+                            //affichage du texte Qté: {avec sa valeur}
                             let pQuantity = document.createElement('p');
                             pQuantity.innerHTML = `Qté : ${produit.quantity}`;
                             divCartItemContentSettingsQuantity.appendChild(pQuantity);
@@ -74,9 +75,14 @@ fetch('http://localhost:3000/api/products')
                             inputCartItemContentSettingsQuantity.name = 'itemQuantity';
                             inputCartItemContentSettingsQuantity.min = '1';
                             inputCartItemContentSettingsQuantity.max = '100';
-                            inputCartItemContentSettingsQuantity.value = produit.quantity;
                             divCartItemContentSettingsQuantity.appendChild(inputCartItemContentSettingsQuantity);
+                            //affichage de value dans le dom
+                            let attrValueQuantity = document.createAttribute('value');
+                            attrValueQuantity.value = produit.quantity;
+                            let inputValue = document.getElementsByTagName('input')[0];
+                            inputValue.setAttributeNode(attrValueQuantity);
 
+                            //boutton supprimer
                             let divCartItemContentSettingsDelete = document.createElement('div');
                             divCartItemContentSettingsDelete.classList.add('cart__item__content__settings__delete')
                             let pTextDelete = document.createElement('p');
@@ -85,9 +91,11 @@ fetch('http://localhost:3000/api/products')
                             divCartItemContentSettings.appendChild(divCartItemContentSettingsDelete);
                             divCartItemContentSettingsDelete.appendChild(pTextDelete);
 
+                            //quantité d'article dans le panier
                             let totalQuantity = document.querySelector('#totalQuantity');
-                            totalQuantity.innerHTML = Number(produit.quantity);
+                            totalQuantity.innerHTML = produit.quantity;
 
+                            //affichage du prix total dans le panier
                             let totalPrice = document.querySelector('#totalPrice');
                             totalPrice.innerHTML = data[i].price * Number(produit.quantity);
                         }
@@ -116,10 +124,10 @@ fetch('http://localhost:3000/api/products')
                             localStorage.removeItem('panier');
                         }
                     });
+
                 }
 
                 //modification de la quantité, prix total, quantité total
-
                 let getInput = document.querySelectorAll('.itemQuantity');
                 for (let inputUpdateQuantity of getInput) {
                     inputUpdateQuantity.addEventListener('change', (e) => {
@@ -129,14 +137,17 @@ fetch('http://localhost:3000/api/products')
                         let dataColor = targetE.closest('.cart__item').getAttribute('data-color');
 
                         for (let p of cart) {
+
                             if (p.id == dataId && p.color == dataColor) {
-                                p.quantity = inputUpdateQuantity.value;
-                                localStorage.setItem('panier', JSON.stringify(cart));
+                                p.quantity = Number(inputUpdateQuantity.value);
+                                localStorage.setItem('panier', JSON.stringify(cart))
                                 window.location.reload();
                             }
                         }
                     });
                 }
+
+
             });
     }).catch(function (msgPanierVide) {
         //affichage message 'panier vide' si rien dans le localstorage

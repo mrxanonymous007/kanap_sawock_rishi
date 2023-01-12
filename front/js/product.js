@@ -62,20 +62,23 @@ fetch('http://localhost:3000/api/products')
                             si vrai stockage des infos dans localstorage*/
                             if (valueCart == '' && quantityCart == 0) {
                                 alert('Veuillez choisir une couleur et renseigner une quantité !');
+                                window.location.reload();
                             } else if (valueCart == '') {
                                 alert('Veuillez choisir une couleur !');
                             } else if (quantityCart <= 0 || quantityCart >= 101) {
                                 alert('Veuillez renseigner une quantité comprise entre 1 et 100 !');
+                                window.location.reload();
                             } else {
 
                                 //ajout du produit dans le tableau "dynamique" -> cart
                                 if (localStorage.getItem('panier')) {
                                     window.location.href = 'cart.html';
                                     let cart = JSON.parse(localStorage.getItem('panier'));
+
                                     //produit sous forme d'objet avec id, quantité, color
                                     let productLs = {
                                         id: idCart,
-                                        quantity: quantityCart,
+                                        quantity: Number(quantityCart),
                                         color: valueCart
                                     };
                                     let addNewItem = true;
@@ -94,12 +97,13 @@ fetch('http://localhost:3000/api/products')
 
                                 } else {
                                     window.location.href = 'cart.html';
+
                                     //tableau vide par défaut
                                     let cart = [];
                                     //produit sous forme d'objet avec id, quantité, color
                                     let productLs = {
                                         id: idCart,
-                                        quantity: quantityCart,
+                                        quantity: Number(quantityCart),
                                         color: valueCart
                                     };
                                     let addNewItem = true;
