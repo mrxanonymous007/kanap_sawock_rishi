@@ -3,21 +3,6 @@ fetch('http://localhost:3000/api/products')
         return response.json()
             .then(function (data) {
 
-
-                /***********BLOCAGE***********/
-                //calcul de la quantité total + affichage dans le dom
-                let totalQuantityEmpty = [];
-                let sommeQ = 0;
-                function totalQuantityTab(tabQ) {
-                    for (let q = 0; q < tabQ.length; q++) {
-                        sommeQ += tabQ[q];
-                    }
-                    return sommeQ;
-                };
-                /***********BLOCAGE***********/
-
-
-
                 for (let productData of data) {
                     let cart = JSON.parse(localStorage.getItem('panier'));
                     for (let productLs of cart) {
@@ -107,17 +92,25 @@ fetch('http://localhost:3000/api/products')
                             deleteItemBtn.innerHTML = 'Supprimer';
                             deleteBtn.appendChild(deleteItemBtn);
 
+                            // total de la quantité de produit dans le panier
+                            function totalQtyProd() {
+                                let totalQuantity = document.querySelector('#totalQuantity');
+                                totalQuantity.innerText = cart.reduce((qty, productLs) => {
+                                    return qty + parseInt(productLs.quantity);
+                                }, 0);
 
-                            /***********BLOCAGE***********/
-                            let totalQtyPdt = document.querySelector('#totalQuantity');
-                            totalQuantityEmpty.push(productLs.quantity);
-                            totalQuantityTab(totalQuantityEmpty);
-                            totalQtyPdt.innerHTML = sommeQ;
-                            // console.log(sommeQ);
-                            /***********BLOCAGE***********/
+                            } totalQtyProd();
+
+                            // total du prix des produits dans le panier
+                            function totalPriceProd(productData) {
+                                let totalPriceCart = productData.price * cart.reduce((qty, productLs) => {
+                                    return qty + parseInt(productLs.quantity);
+                                }, 0);
+                                let priceTxt = document.querySelector('#totalPrice');
+                                priceTxt.innerHTML = totalPriceCart;
+                            } totalPriceProd(productData);
                         }
                     }
-
                 }
 
                 //suppression d'un article unique sur la page panier
@@ -134,7 +127,7 @@ fetch('http://localhost:3000/api/products')
                         if (btnSuppClick) {
                             cart = cart.filter(p => p.color != colorId || p.id != dataId)
                             localStorage.setItem('panier', JSON.stringify(cart));
-                            window.location.reload();
+                            // window.location.reload();
                         }
 
                         //si tableau vide (avec crochet présent), suppression complète du localstorage
