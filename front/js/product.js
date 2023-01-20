@@ -69,7 +69,6 @@ fetch('http://localhost:3000/api/products')
                                 alert('Veuillez renseigner une quantité comprise entre 1 et 100 !');
                                 window.location.reload();
                             } else {
-
                                 //ajout du produit dans le tableau "dynamique" -> cart
                                 if (localStorage.getItem('panier')) {
                                     window.location.href = 'cart.html';
@@ -92,8 +91,6 @@ fetch('http://localhost:3000/api/products')
                                         cart.push(productLs);
                                     };
                                     let stringifyEmptyArray = localStorage.setItem('panier', JSON.stringify(cart));
-
-
 
                                 } else {
                                     window.location.href = 'cart.html';

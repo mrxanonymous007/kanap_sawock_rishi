@@ -1,105 +1,123 @@
 fetch('http://localhost:3000/api/products')
     .then(function (response) {
         return response.json()
-
             .then(function (data) {
 
-                for (let i = 0; i < data.length; i++) {
 
-                    //recupération et conversion des données stockées dans l'api
+                /***********BLOCAGE***********/
+                //calcul de la quantité total + affichage dans le dom
+                let totalQuantityEmpty = [];
+                let sommeQ = 0;
+                function totalQuantityTab(tabQ) {
+                    for (let q = 0; q < tabQ.length; q++) {
+                        sommeQ += tabQ[q];
+                    }
+                    return sommeQ;
+                };
+                /***********BLOCAGE***********/
+
+
+
+                for (let productData of data) {
                     let cart = JSON.parse(localStorage.getItem('panier'));
+                    for (let productLs of cart) {
+                        if (productData._id === productLs.id) {
 
-                    // iteration sur le panier du localstorage afin de verifier les infos avec les données de l'api
-                    for (let produit of cart) {
+                            let sectionArt = document.querySelector('#cart__items');
+                            /* création de la balise ARTICLE avec sa classe et les attributs data-id, data-color */
+                            let article = document.createElement('article');
+                            article.classList.add('cart__item');
+                            article.setAttribute('data-id', `${productLs.id}`);
+                            article.setAttribute('data-color', `${productLs.color}`);
+                            sectionArt.appendChild(article);
+                            // console.log(article); OK
 
-                        //si aucune condition affichage de toutes les données de l'api
-                        if (data[i]._id == produit.id) {
-                            //creation de l'element article
-                            let sectionId = document.querySelector('#cart__items');
-                            let articleCart = document.createElement('article');
-                            articleCart.classList.add('cart__item');
-                            articleCart.dataset.id = produit.id;
-                            articleCart.dataset.color = produit.color;
-                            sectionId.appendChild(articleCart);
 
-                            //creation de la div : cart__item__img ainsi que la balise img
-                            let divItemImg = document.createElement('div');
-                            divItemImg.classList.add('cart__item__img');
-                            let imgCart = document.createElement('img');
-                            imgCart.src = data[i].imageUrl;
-                            imgCart.alt = data[i].altTxt;
-                            articleCart.appendChild(divItemImg);
-                            divItemImg.appendChild(imgCart);
+                            //DEBUT
+                            /* création de la DIV : cart__item__img */
+                            let cart_item_img = document.createElement('div');
+                            cart_item_img.classList.add('cart__item__img');
+                            //relier la div dans article
+                            article.appendChild(cart_item_img);
 
-                            //creation de la div : cart__item__content
-                            let divItemContent = document.createElement('div');
-                            divItemContent.classList.add('cart__item__content');
-                            articleCart.appendChild(divItemContent);
+                            /* création de la balise IMG */
+                            let img = document.createElement('img');
+                            img.src = `${productData.imageUrl}`;
+                            img.alt = `${productData.altTxt}`;
+                            //relier à la div parent
+                            cart_item_img.appendChild(img);
+                            // console.log(cart_item_img);OK
+                            //FIN
 
-                            //creation de la div : cart__item__content__description à l'intérieur de la div : cart__item__content
-                            let divItemContentDescription = document.createElement('div');
-                            divItemContentDescription.classList.add('cart__item__content__description');
-                            divItemContent.appendChild(divItemContentDescription);
 
-                            /*creation du h2(nom du produit), p(couleur) et p(prix) 
-                            à l'intérieur de la div : cart__item__content__description*/
-                            let h2TxtTitle = document.createElement('h2');
-                            h2TxtTitle.innerHTML = data[i].name;
-                            divItemContentDescription.appendChild(h2TxtTitle);
 
-                            let pTxtColor = document.createElement('p');
-                            pTxtColor.innerHTML = produit.color;
-                            divItemContentDescription.appendChild(pTxtColor);
+                            //DEBUT
+                            /* création de la DIV : cart__item__content */
+                            let cart_item_content = document.createElement('div');
+                            cart_item_content.classList.add('cart__item__content');
+                            //relier à la balise article
+                            article.appendChild(cart_item_content);
 
-                            let pTxtPrice = document.createElement('p');
-                            pTxtPrice.innerHTML = `${data[i].price} €`;
-                            divItemContentDescription.appendChild(pTxtPrice);
+                            //DIV 1 : h2, p, p
+                            /* création de la DIV : cart__item__content__description */
+                            let cart__item__content__description = document.createElement('div');
+                            cart__item__content__description.classList.add('cart__item__content__description');
+                            //relier la div : cart__item__content__description à la div parent
+                            cart_item_content.appendChild(cart__item__content__description);
+                            let nameTxt = document.createElement('h2');
+                            let colorTxt = document.createElement('p');
+                            let priceTxt = document.createElement('p');
+                            nameTxt.innerText = `${productData.name}`;
+                            colorTxt.innerText = `${productLs.color}`;
+                            priceTxt.innerText = `${productData.price}€`;
+                            cart__item__content__description.appendChild(nameTxt);
+                            cart__item__content__description.appendChild(colorTxt);
+                            cart__item__content__description.appendChild(priceTxt);
+                            // console.log(cart_item_content); OK
 
-                            //creation div : cart__item__content__settings à l'interieur de div : cart__item__content
-                            let divCartItemContentSettings = document.createElement('div');
-                            divCartItemContentSettings.classList.add('cart__item__content__settings');
-                            divItemContent.appendChild(divCartItemContentSettings);
+                            //DIV 2 : div, p et input
+                            let cart__item__content__settings = document.createElement('div');
+                            cart__item__content__settings.classList.add('cart__item__content__settings');
+                            cart_item_content.appendChild(cart__item__content__settings);
+                            //sous div dans div 2
+                            let cart__item__content__settings__quantity = document.createElement('div');
+                            cart__item__content__settings__quantity.classList.add('cart__item__content__settings__quantity');
+                            cart__item__content__settings.appendChild(cart__item__content__settings__quantity);
+                            let qtyTxt = document.createElement('p');
+                            qtyTxt.innerHTML = 'Qté :'
+                            cart__item__content__settings__quantity.appendChild(qtyTxt);
 
-                            let divCartItemContentSettingsQuantity = document.createElement('div');
-                            divCartItemContentSettingsQuantity.classList.add('cart__item__content__settings__quantity');
-                            divCartItemContentSettings.appendChild(divCartItemContentSettingsQuantity);
+                            //creation du input
+                            let input = document.createElement('input');
+                            input.type = 'number';
+                            input.classList.add('itemQuantity');
+                            input.name = 'itemQuantity';
+                            input.min = 1;
+                            input.max = 100;
+                            input.setAttribute('value', `${productLs.quantity}`);
+                            cart__item__content__settings__quantity.appendChild(input);
+                            // console.log(input); OK
 
-                            //affichage du texte Qté: {avec sa valeur}
-                            let pQuantity = document.createElement('p');
-                            pQuantity.innerHTML = `Qté : ${produit.quantity}`;
-                            divCartItemContentSettingsQuantity.appendChild(pQuantity);
+                            //sous div 2 dans div 2
+                            let deleteBtn = document.createElement('div');
+                            deleteBtn.classList.add('cart__item__content__settings__delete');
+                            cart__item__content__settings.appendChild(deleteBtn);
+                            let deleteItemBtn = document.createElement('p');
+                            deleteItemBtn.classList.add('deleteItem');
+                            deleteItemBtn.innerHTML = 'Supprimer';
+                            deleteBtn.appendChild(deleteItemBtn);
 
-                            let inputCartItemContentSettingsQuantity = document.createElement('input');
-                            inputCartItemContentSettingsQuantity.type = 'number';
-                            inputCartItemContentSettingsQuantity.classList.add('itemQuantity');
-                            inputCartItemContentSettingsQuantity.name = 'itemQuantity';
-                            inputCartItemContentSettingsQuantity.min = '1';
-                            inputCartItemContentSettingsQuantity.max = '100';
-                            divCartItemContentSettingsQuantity.appendChild(inputCartItemContentSettingsQuantity);
-                            //affichage de value dans le dom
-                            let attrValueQuantity = document.createAttribute('value');
-                            attrValueQuantity.value = produit.quantity;
-                            let inputValue = document.getElementsByTagName('input')[0];
-                            inputValue.setAttributeNode(attrValueQuantity);
 
-                            //boutton supprimer
-                            let divCartItemContentSettingsDelete = document.createElement('div');
-                            divCartItemContentSettingsDelete.classList.add('cart__item__content__settings__delete')
-                            let pTextDelete = document.createElement('p');
-                            pTextDelete.classList.add('deleteItem');
-                            pTextDelete.innerHTML = 'Supprimer';
-                            divCartItemContentSettings.appendChild(divCartItemContentSettingsDelete);
-                            divCartItemContentSettingsDelete.appendChild(pTextDelete);
-
-                            //quantité d'article dans le panier
-                            let totalQuantity = document.querySelector('#totalQuantity');
-                            totalQuantity.innerHTML = produit.quantity;
-
-                            //affichage du prix total dans le panier
-                            let totalPrice = document.querySelector('#totalPrice');
-                            totalPrice.innerHTML = data[i].price * Number(produit.quantity);
+                            /***********BLOCAGE***********/
+                            let totalQtyPdt = document.querySelector('#totalQuantity');
+                            totalQuantityEmpty.push(productLs.quantity);
+                            totalQuantityTab(totalQuantityEmpty);
+                            totalQtyPdt.innerHTML = sommeQ;
+                            // console.log(sommeQ);
+                            /***********BLOCAGE***********/
                         }
                     }
+
                 }
 
                 //suppression d'un article unique sur la page panier
@@ -127,7 +145,7 @@ fetch('http://localhost:3000/api/products')
 
                 }
 
-                //modification de la quantité, prix total, quantité total
+                //modification de la quantité
                 let getInput = document.querySelectorAll('.itemQuantity');
                 for (let inputUpdateQuantity of getInput) {
                     inputUpdateQuantity.addEventListener('change', (e) => {
@@ -137,30 +155,37 @@ fetch('http://localhost:3000/api/products')
                         let dataColor = targetE.closest('.cart__item').getAttribute('data-color');
 
                         for (let p of cart) {
-
                             if (p.id == dataId && p.color == dataColor) {
-                                p.quantity = Number(inputUpdateQuantity.value);
+                                p.quantity = parseInt(inputUpdateQuantity.value);
                                 localStorage.setItem('panier', JSON.stringify(cart))
                                 window.location.reload();
+
+
+
+                                /***********BLOCAGE***********/
+                                //erreur.. alert s'affiche au bon moment mais màj effectué dans le localstorage quand même ET ne prend pas en compte la limite imposé càd min 1 et max 100
+                                if (p.quantity <= 0 || p.quantity >= 101) {
+                                    alert('quantité incorrecte.. min 1 et max 100')
+                                }
+                                if (inputUpdateQuantity.value == '' && inputUpdateQuantity.value == 0) {
+                                    alert('valeur vide..')
+                                }
+                                /***********BLOCAGE***********/
                             }
                         }
                     });
                 }
-
-
-            });
-    }).catch(function (msgPanierVide) {
-        //affichage message 'panier vide' si rien dans le localstorage
-        msgPanierVide = 'Panier vide pour le moment...'
+            })
+    }).catch(function (emptyCart) {
+        emptyCart = 'Panier vide...';
 
         if (localStorage.length == '') {
+            let section = document.querySelector('#cart__items');
+            let msgTxt = document.createElement('p');
+            let txtNode = document.createTextNode(emptyCart);
 
-            let cartItemId = document.querySelector('#cart__items');
-            let createp = document.createElement('p');
-            let textp = document.createTextNode(msgPanierVide);
-
-            cartItemId.appendChild(createp);
-            createp.appendChild(textp);
+            section.appendChild(msgTxt);
+            msgTxt.appendChild(txtNode);
             document.querySelector('p').style.textAlign = 'center';
         }
-    });
+    })
