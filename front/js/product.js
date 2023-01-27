@@ -97,6 +97,7 @@ fetch('http://localhost:3000/api/products')
 
                                     //tableau vide par défaut
                                     let cart = [];
+
                                     //produit sous forme d'objet avec id, quantité, color
                                     let productLs = {
                                         id: idCart,
