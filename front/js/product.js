@@ -91,7 +91,7 @@ fetch('http://localhost:3000/api/products')
                             if (addNewItem == true) {
                                 cart.push(productLs);
                             };
-                            let stringifyEmptyArray = localStorage.setItem('panier', JSON.stringify(cart));
+                            localStorage.setItem('panier', JSON.stringify(cart));
 
                         } else {
                             window.location.href = 'cart.html';
@@ -115,7 +115,7 @@ fetch('http://localhost:3000/api/products')
                             if (addNewItem == true) {
                                 cart.push(productLs);
                             };
-                            let stringifyEmptyArray = localStorage.setItem('panier', JSON.stringify(cart));
+                            localStorage.setItem('panier', JSON.stringify(cart));
                         }
                     }
                 }
@@ -125,7 +125,7 @@ fetch('http://localhost:3000/api/products')
     })
     .catch(function (err) {
         //si api éteint ou refus de connexion une boîte de dialogue apparaît avec un message d'erreur
-        alert('Erreur: ' + err);
+        alert(err);
 
         err = 'Oups... Veuillez réessayer plus tard !';
         let classTitles = document.querySelector('.titles');

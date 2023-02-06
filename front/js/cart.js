@@ -2,6 +2,7 @@ let apiData;
 fetch('http://localhost:3000/api/products')
     .then(function (response) {
         return response.json()
+
     })
     .then(function (data) {
         apiData = data;
@@ -27,11 +28,19 @@ fetch('http://localhost:3000/api/products')
         // console.log(err);
     });
 
+
+
+
+
+
 //recuperation du panier stocké dans le localstorage
 function recupBasket() {
     let cart = JSON.parse(localStorage.getItem('panier'));
     return cart;
 }
+
+
+
 
 //affichage du panier dans le dom
 function affichagePanier(apiData, cart) {
@@ -124,6 +133,9 @@ function affichagePanier(apiData, cart) {
     section.appendChild(docFrag);
 }
 
+
+
+
 //calcul du total des PRODUITS dans le panier
 function totalQty(cart) {
     let qty = 0;
@@ -131,8 +143,11 @@ function totalQty(cart) {
         qty += Number(product.quantity);
     }
     return qty;
-
 }
+
+
+
+
 
 //calcul du PRIX TOTAL € dans le panier
 function totalPrice(cart, apiData) {
@@ -144,11 +159,19 @@ function totalPrice(cart, apiData) {
     return prx;
 }
 
+
+
+
+
 //affichage du prix total et de la quantité total d'article
 function displayPrxEtQty(cart, apiData) {
     document.querySelector('#totalQuantity').innerHTML = totalQty(cart);
     document.querySelector('#totalPrice').innerHTML = totalPrice(cart, apiData);
 }
+
+
+
+
 
 //suppression d'un produit du panier
 function deleteItem() {
@@ -177,6 +200,10 @@ function deleteItem() {
 
 }
 
+
+
+
+
 //modification de la quantité de produit dans le ls grâce à l'evenement change depuis le dom
 function localQtyUpdate() {
     let getInput = document.querySelectorAll('.itemQuantity');
@@ -188,9 +215,23 @@ function localQtyUpdate() {
 
             for (let product of cart) {
                 if (product.id == dataId && product.color == dataColor) {
-                    product.quantity = parseInt(modifyQty.value);
-                    localStorage.setItem('panier', JSON.stringify(cart));
-                    window.location.reload();
+
+                    if (modifyQty.value < 1 || modifyQty.value > 100) {
+                        modifyQty.value = 0;
+                        product.quantity = parseInt(modifyQty.value);
+                        localStorage.setItem('panier', JSON.stringify(cart));
+                        // window.location.reload();
+                        displayPrxEtQty(cart, apiData)
+                        alert('Limite autorisé 1-100.')
+                    }
+                    else {
+                        product.quantity = parseInt(modifyQty.value);
+                        localStorage.setItem('panier', JSON.stringify(cart));
+                        displayPrxEtQty(cart, apiData)
+                        // window.location.reload();
+
+                    }
+
                 }
             }
         })
@@ -198,4 +239,78 @@ function localQtyUpdate() {
 }
 
 
+
+
+////////////////FORMULAIRE DE CONTACT REGEX\\\\\\\\\\\\\\\\\\\\\
+
+//FIRST NAME
+// let firstNameRegex = new RegExp(/^[a-zA-Z\u00C0-\u017F\s']+$/);
+let firstNameRegex = new RegExp(/^(?!.*\btest|bonjour\b)([A-Za-z\u00C0-\u017F\']+)$/);
+
+let firstNameInput = document.getElementById("firstName");
+let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+
+firstNameInput.addEventListener("input", function (event) {
+    if (!firstNameRegex.test(event.target.value)) {
+        firstNameErrorMsg.textContent = "Prénom non valide";
+    } else {
+        firstNameErrorMsg.textContent = "";
+    }
+});
+
+//LAST NAME
+let lastNameRegex = new RegExp(/^(?!.*\btest|bonjour\b)([A-Za-z\u00C0-\u017F\']+)$/);
+
+let lastNameInput = document.getElementById("lastName");
+let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+
+lastNameInput.addEventListener("input", function (event) {
+    if (!lastNameRegex.test(event.target.value)) {
+        lastNameErrorMsg.textContent = "Nom non valide";
+    } else {
+        lastNameErrorMsg.textContent = "";
+    }
+});
+
+//ADRESSE
+let addressRegex = new RegExp(/^\d+(,\s*)?\s[a-zA-Z\u00C0-\u017F\s']+$/);
+
+let addressInput = document.getElementById("address");
+let addressErrorMsg = document.getElementById("addressErrorMsg");
+
+addressInput.addEventListener("input", function (event) {
+    if (!addressRegex.test(event.target.value)) {
+        addressErrorMsg.textContent = "Adresse postale non valide";
+    } else {
+        addressErrorMsg.textContent = "";
+    }
+});
+
+//CITY
+let cityRegex = new RegExp(/^[a-zA-Z\u00C0-\u017F\s']+$/);
+
+let cityInput = document.getElementById("city");
+let cityErrorMsg = document.getElementById("cityErrorMsg");
+
+cityInput.addEventListener("input", function (event) {
+    if (!cityRegex.test(event.target.value)) {
+        cityErrorMsg.textContent = "Ville non valide";
+    } else {
+        cityErrorMsg.textContent = "";
+    }
+});
+
+//EMAIL
+let emailRegex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
+
+let emailInput = document.getElementById("email");
+let emailErrorMsg = document.getElementById("emailErrorMsg");
+
+emailInput.addEventListener("input", function (event) {
+    if (!emailRegex.test(event.target.value)) {
+        emailErrorMsg.textContent = "Adresse e-mail non valide";
+    } else {
+        emailErrorMsg.textContent = "";
+    }
+});
 
