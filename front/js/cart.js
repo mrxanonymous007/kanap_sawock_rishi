@@ -28,19 +28,11 @@ fetch('http://localhost:3000/api/products')
         // console.log(err);
     });
 
-
-
-
-
-
 //recuperation du panier stocké dans le localstorage
 function recupBasket() {
     let cart = JSON.parse(localStorage.getItem('panier'));
     return cart;
 }
-
-
-
 
 //affichage du panier dans le dom
 function affichagePanier(apiData, cart) {
@@ -133,9 +125,6 @@ function affichagePanier(apiData, cart) {
     section.appendChild(docFrag);
 }
 
-
-
-
 //calcul du total des PRODUITS dans le panier
 function totalQty(cart) {
     let qty = 0;
@@ -144,10 +133,6 @@ function totalQty(cart) {
     }
     return qty;
 }
-
-
-
-
 
 //calcul du PRIX TOTAL € dans le panier
 function totalPrice(cart, apiData) {
@@ -159,19 +144,11 @@ function totalPrice(cart, apiData) {
     return prx;
 }
 
-
-
-
-
 //affichage du prix total et de la quantité total d'article
 function displayPrxEtQty(cart, apiData) {
     document.querySelector('#totalQuantity').innerHTML = totalQty(cart);
     document.querySelector('#totalPrice').innerHTML = totalPrice(cart, apiData);
 }
-
-
-
-
 
 //suppression d'un produit du panier
 function deleteItem() {
@@ -200,10 +177,6 @@ function deleteItem() {
 
 }
 
-
-
-
-
 //modification de la quantité de produit dans le ls grâce à l'evenement change depuis le dom
 function localQtyUpdate() {
     let getInput = document.querySelectorAll('.itemQuantity');
@@ -216,20 +189,26 @@ function localQtyUpdate() {
             for (let product of cart) {
                 if (product.id == dataId && product.color == dataColor) {
 
-                    if (modifyQty.value < 1 || modifyQty.value > 100) {
-                        modifyQty.value = 0;
+                    /* dans le if, si qté inférieur à 1, input sera à 1 par défaut
+                    dans le else if, si qté supérieur à 100, input sera à 100 par défaut */
+                    if (modifyQty.value < 1) {
+                        modifyQty.value = 1;
                         product.quantity = parseInt(modifyQty.value);
                         localStorage.setItem('panier', JSON.stringify(cart));
-                        // window.location.reload();
                         displayPrxEtQty(cart, apiData)
                         alert('Limite autorisé 1-100.')
-                    }
-                    else {
+
+                    } else if (modifyQty.value > 100) {
+                        modifyQty.value = 100;
                         product.quantity = parseInt(modifyQty.value);
                         localStorage.setItem('panier', JSON.stringify(cart));
                         displayPrxEtQty(cart, apiData)
-                        // window.location.reload();
+                        alert('Limite autorisé 1-100.')
 
+                    } else {
+                        product.quantity = parseInt(modifyQty.value);
+                        localStorage.setItem('panier', JSON.stringify(cart));
+                        displayPrxEtQty(cart, apiData)
                     }
 
                 }
@@ -241,7 +220,7 @@ function localQtyUpdate() {
 
 
 
-////////////////FORMULAIRE DE CONTACT REGEX\\\\\\\\\\\\\\\\\\\\\
+////////////////DÉBUT => FORMULAIRE DE CONTACT REGEX\\\\\\\\\\\\\\\\\\\\\
 
 //FIRST NAME
 // let firstNameRegex = new RegExp(/^[a-zA-Z\u00C0-\u017F\s']+$/);
@@ -287,7 +266,7 @@ addressInput.addEventListener("input", function (event) {
 });
 
 //CITY
-let cityRegex = new RegExp(/^[a-zA-Z\u00C0-\u017F\s']+$/);
+let cityRegex = new RegExp(/^(?!.*\btest|bonjour\b)([A-Za-z\u00C0-\u017F\']+)$/);
 
 let cityInput = document.getElementById("city");
 let cityErrorMsg = document.getElementById("cityErrorMsg");
@@ -313,4 +292,6 @@ emailInput.addEventListener("input", function (event) {
         emailErrorMsg.textContent = "";
     }
 });
+////////////////FIN => FORMULAIRE DE CONTACT REGEX\\\\\\\\\\\\\\\\\\\\\
+
 
