@@ -21,9 +21,11 @@ fetch('http://localhost:3000/api/products')
             let msgTxt = document.createElement('p');
             let txtNode = document.createTextNode(err);
 
-            section.appendChild(msgTxt);
-            msgTxt.appendChild(txtNode);
-            document.querySelector('p').style.textAlign = 'center';
+            if (section && msgTxt && txtNode) {
+                section.appendChild(msgTxt);
+                msgTxt.appendChild(txtNode);
+                document.querySelector('p').style.textAlign = 'center';
+            }
         }
         // console.log(err);
     });
@@ -223,61 +225,71 @@ function localQtyUpdate() {
 ////////////////DÉBUT => FORMULAIRE DE CONTACT REGEX\\\\\\\\\\\\\\\\\\\\\
 
 //FIRST NAME
-// let firstNameRegex = new RegExp(/^[a-zA-Z\u00C0-\u017F\s']+$/);
-let firstNameRegex = new RegExp(/^(?!.*\btest|bonjour\b)([A-Za-z\u00C0-\u017F\']+)$/);
+let firstNameRegex = new RegExp(/^(?!.-*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
 
 let firstNameInput = document.getElementById("firstName");
 let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 
-firstNameInput.addEventListener("input", function (event) {
-    if (!firstNameRegex.test(event.target.value)) {
-        firstNameErrorMsg.textContent = "Prénom non valide";
-    } else {
-        firstNameErrorMsg.textContent = "";
-    }
-});
+if (firstNameInput) {
+    firstNameInput.addEventListener("input", function (event) {
+        if (!firstNameRegex.test(event.target.value)) {
+            firstNameErrorMsg.textContent = "Prénom non valide";
+        } else {
+            firstNameErrorMsg.textContent = "";
+        }
+    });
+}
 
 //LAST NAME
-let lastNameRegex = new RegExp(/^(?!.*\btest|bonjour\b)([A-Za-z\u00C0-\u017F\']+)$/);
+let lastNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
 
 let lastNameInput = document.getElementById("lastName");
 let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
 
-lastNameInput.addEventListener("input", function (event) {
-    if (!lastNameRegex.test(event.target.value)) {
-        lastNameErrorMsg.textContent = "Nom non valide";
-    } else {
-        lastNameErrorMsg.textContent = "";
-    }
-});
+if (lastNameInput) {
+    lastNameInput.addEventListener("input", function (event) {
+        if (!lastNameRegex.test(event.target.value)) {
+            lastNameErrorMsg.textContent = "Nom non valide";
+        } else {
+            lastNameErrorMsg.textContent = "";
+        }
+    });
+}
+
 
 //ADRESSE
-let addressRegex = new RegExp(/^\d+(,\s*)?\s[a-zA-Z\u00C0-\u017F\s']+$/);
+let addressRegex = new RegExp(/^\d+(,\s*)?\s[a-z-A-Z\u00C0-\u017F\s']+$/);
 
 let addressInput = document.getElementById("address");
 let addressErrorMsg = document.getElementById("addressErrorMsg");
 
-addressInput.addEventListener("input", function (event) {
-    if (!addressRegex.test(event.target.value)) {
-        addressErrorMsg.textContent = "Adresse postale non valide";
-    } else {
-        addressErrorMsg.textContent = "";
-    }
-});
+if (addressInput) {
+    addressInput.addEventListener("input", function (event) {
+        if (!addressRegex.test(event.target.value)) {
+            addressErrorMsg.textContent = "Adresse postale non valide";
+        } else {
+            addressErrorMsg.textContent = "";
+        }
+    });
+}
+
 
 //CITY
-let cityRegex = new RegExp(/^(?!.*\btest|bonjour\b)([A-Za-z\u00C0-\u017F\']+)$/);
+let cityRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
 
 let cityInput = document.getElementById("city");
 let cityErrorMsg = document.getElementById("cityErrorMsg");
 
-cityInput.addEventListener("input", function (event) {
-    if (!cityRegex.test(event.target.value)) {
-        cityErrorMsg.textContent = "Ville non valide";
-    } else {
-        cityErrorMsg.textContent = "";
-    }
-});
+if (cityInput) {
+    cityInput.addEventListener("input", function (event) {
+        if (!cityRegex.test(event.target.value)) {
+            cityErrorMsg.textContent = "Ville non valide";
+        } else {
+            cityErrorMsg.textContent = "";
+        }
+    });
+
+}
 
 //EMAIL
 let emailRegex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
@@ -285,13 +297,106 @@ let emailRegex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
 let emailInput = document.getElementById("email");
 let emailErrorMsg = document.getElementById("emailErrorMsg");
 
-emailInput.addEventListener("input", function (event) {
-    if (!emailRegex.test(event.target.value)) {
-        emailErrorMsg.textContent = "Adresse e-mail non valide";
-    } else {
-        emailErrorMsg.textContent = "";
-    }
-});
+if (emailInput) {
+    emailInput.addEventListener("input", function (event) {
+        if (!emailRegex.test(event.target.value)) {
+            emailErrorMsg.textContent = "Adresse e-mail non valide";
+        } else {
+            emailErrorMsg.textContent = "";
+        }
+    });
+}
+
 ////////////////FIN => FORMULAIRE DE CONTACT REGEX\\\\\\\\\\\\\\\\\\\\\
 
 
+
+
+//Bouton COMMANDER!
+
+let form = document.querySelector('.cart__order__form');
+if (form) {
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        //console.log(form.firstName.value)
+        if (form.firstName && form.lastName && form.city && form.address && form.email) {
+            let contactForm = {
+                firstName: form.firstName.value,
+                lastName: form.lastName.value,
+                city: form.city.value,
+                address: form.address.value,
+                email: form.email.value,
+            }
+
+            let cart = recupBasket();
+            let products = [];
+            for (let product of cart) {
+                products.push(product.id);
+            }
+
+            //création d'un tableau réunissant les formulaire de contact et des infos des produits
+            let orderedUser = {
+                contact: contactForm,
+                products: products
+            };
+            console.log(orderedUser);
+            postRequestSent(orderedUser)
+        }
+    });
+
+}
+
+
+//si panier vide message d'erreur indiquant à l'utilisateur d'ajouter un article dans le panier
+function submitBtnOrder() {
+    let cart = recupBasket();
+    let btn = document.querySelector('.cart__order__form');
+    if (btn) {
+        btn.addEventListener('submit', (e) => {
+            e.preventDefault();
+            //vérifie si le localstorage possède 0 article
+            if (cart == null || undefined || 0) {
+                alert('Veuillez ajouter un article dans le panier !')
+            }
+        }
+        )
+    }
+
+}
+submitBtnOrder();
+
+function postRequestSent(orderedUser) {
+    fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderedUser),
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            return data.orderId;
+        })
+        .then(function (orderId) {
+            window.location.href = "confirmation.html?" + `id=${orderId}`;
+            localStorage.clear();
+            displayOrderId();
+            return orderId;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+
+function displayOrderId() {
+    let url = new URL(window.location.href);
+    let orderId = url.searchParams.get("id");
+    if (orderId) {
+        document.querySelector("#orderId").textContent = orderId;
+    }
+}
+displayOrderId();
