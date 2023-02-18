@@ -2,7 +2,6 @@ let apiData;
 fetch('http://localhost:3000/api/products')
     .then(function (response) {
         return response.json()
-
     })
     .then(function (data) {
         apiData = data;
@@ -14,20 +13,17 @@ fetch('http://localhost:3000/api/products')
     })
     .catch(function (err) {
         err = 'Panier vide...'
-
         //condition pour afficher le msg si le ls est vide
         if (localStorage.length == '') {
             let section = document.querySelector('#cart__items');
             let msgTxt = document.createElement('p');
             let txtNode = document.createTextNode(err);
-
             if (section && msgTxt && txtNode) {
                 section.appendChild(msgTxt);
                 msgTxt.appendChild(txtNode);
                 document.querySelector('p').style.textAlign = 'center';
             }
         }
-        // console.log(err);
     });
 
 //recuperation du panier stocké dans le localstorage
@@ -38,11 +34,8 @@ function recupBasket() {
 
 //affichage du panier dans le dom
 function affichagePanier(apiData, cart) {
-
     let docFrag = document.createDocumentFragment();
-
     for (let product of cart) {
-
         //verif de l'id du produit se trouvant dans le ls et dans l'api afin de faire afficher chaque article
         let data = apiData.find((element) => element._id == product.id);
 
@@ -156,27 +149,23 @@ function displayPrxEtQty(cart, apiData) {
 function deleteItem() {
     let articleFromDom = document.querySelectorAll('.cart__item');
     let cart = recupBasket();
-
     for (let articleProduct of articleFromDom) {
         articleProduct.addEventListener('click', (e) => {
             let target = e.currentTarget;
             let dataId = target.dataset.id;
             let colorId = target.dataset.color;
             let btnSuppClick = e.target.classList.contains('deleteItem');
-
             if (btnSuppClick) {
                 cart = cart.filter((element) => element.color != colorId || element.id != dataId)
                 localStorage.setItem('panier', JSON.stringify(cart));
                 window.location.reload();
             }
-
             //si tableau vide (avec crochet présent), suppression complète du localstorage
             if (cart.length == '') {
                 localStorage.removeItem('panier');
             }
         });
     }
-
 }
 
 //modification de la quantité de produit dans le ls grâce à l'evenement change depuis le dom
@@ -187,10 +176,8 @@ function localQtyUpdate() {
         modifyQty.addEventListener('change', (e) => {
             let dataId = e.target.closest('.cart__item').getAttribute('data-id');
             let dataColor = e.target.closest('.cart__item').getAttribute('data-color');
-
             for (let product of cart) {
                 if (product.id == dataId && product.color == dataColor) {
-
                     /* dans le if, si qté inférieur à 1, input sera à 1 par défaut
                     dans le else if, si qté supérieur à 100, input sera à 100 par défaut */
                     if (modifyQty.value < 1) {
@@ -199,121 +186,80 @@ function localQtyUpdate() {
                         localStorage.setItem('panier', JSON.stringify(cart));
                         displayPrxEtQty(cart, apiData)
                         alert('Limite autorisé 1-100.')
-
                     } else if (modifyQty.value > 100) {
                         modifyQty.value = 100;
                         product.quantity = parseInt(modifyQty.value);
                         localStorage.setItem('panier', JSON.stringify(cart));
                         displayPrxEtQty(cart, apiData)
                         alert('Limite autorisé 1-100.')
-
                     } else {
                         product.quantity = parseInt(modifyQty.value);
                         localStorage.setItem('panier', JSON.stringify(cart));
                         displayPrxEtQty(cart, apiData)
                     }
-
                 }
             }
-        })
+        });
     }
 }
 
+/********Début RegExp********/
+/* Empêchement au client de valider la commande si la valeur attendu est incorrect*/
+function validateInput(regex, input, errorMsg) {
+    input.addEventListener("input", function (event) {
+        if (!regex.test(event.target.value)) {
+            errorMsg.textContent = "Entrée non valide";
+            input.setCustomValidity("Entrée non valide. Veuillez entrer une valeur valide.");
+        } else {
+            errorMsg.textContent = "";
+            input.setCustomValidity("");
+        }
+    });
+}
 
-
-
-////////////////DÉBUT => FORMULAIRE DE CONTACT REGEX\\\\\\\\\\\\\\\\\\\\\
-
-//FIRST NAME
-let firstNameRegex = new RegExp(/^(?!.-*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
-
-let firstNameInput = document.getElementById("firstName");
-let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-
+// regexp firstName
+const firstNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
+const firstNameInput = document.getElementById("firstName");
+const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 if (firstNameInput) {
-    firstNameInput.addEventListener("input", function (event) {
-        if (!firstNameRegex.test(event.target.value)) {
-            firstNameErrorMsg.textContent = "Prénom non valide";
-        } else {
-            firstNameErrorMsg.textContent = "";
-        }
-    });
+    validateInput(firstNameRegex, firstNameInput, firstNameErrorMsg);
 }
 
-//LAST NAME
-let lastNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
-
-let lastNameInput = document.getElementById("lastName");
-let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-
+//regexp lastName
+const lastNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
+const lastNameInput = document.getElementById("lastName");
+const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
 if (lastNameInput) {
-    lastNameInput.addEventListener("input", function (event) {
-        if (!lastNameRegex.test(event.target.value)) {
-            lastNameErrorMsg.textContent = "Nom non valide";
-        } else {
-            lastNameErrorMsg.textContent = "";
-        }
-    });
+    validateInput(lastNameRegex, lastNameInput, lastNameErrorMsg);
 }
 
-
-//ADRESSE
-let addressRegex = new RegExp(/^\d+(,\s*)?\s[a-z-A-Z\u00C0-\u017F\s']+$/);
-
-let addressInput = document.getElementById("address");
-let addressErrorMsg = document.getElementById("addressErrorMsg");
-
+//regexp address
+const addressRegex = new RegExp(/^\d+(,\s*)?\s[a-z-A-Z\u00C0-\u017F\s']+$/);
+const addressInput = document.getElementById("address");
+const addressErrorMsg = document.getElementById("addressErrorMsg");
 if (addressInput) {
-    addressInput.addEventListener("input", function (event) {
-        if (!addressRegex.test(event.target.value)) {
-            addressErrorMsg.textContent = "Adresse postale non valide";
-        } else {
-            addressErrorMsg.textContent = "";
-        }
-    });
+    validateInput(addressRegex, addressInput, addressErrorMsg);
 }
 
-
-//CITY
-let cityRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
-
-let cityInput = document.getElementById("city");
-let cityErrorMsg = document.getElementById("cityErrorMsg");
-
+//regexp city
+const cityRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
+const cityInput = document.getElementById("city");
+const cityErrorMsg = document.getElementById("cityErrorMsg");
 if (cityInput) {
-    cityInput.addEventListener("input", function (event) {
-        if (!cityRegex.test(event.target.value)) {
-            cityErrorMsg.textContent = "Ville non valide";
-        } else {
-            cityErrorMsg.textContent = "";
-        }
-    });
-
+    validateInput(cityRegex, cityInput, cityErrorMsg);
 }
 
-//EMAIL
-let emailRegex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
-
-let emailInput = document.getElementById("email");
-let emailErrorMsg = document.getElementById("emailErrorMsg");
-
+//regexp email
+const emailRegex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
+const emailInput = document.getElementById("email");
+const emailErrorMsg = document.getElementById("emailErrorMsg");
 if (emailInput) {
-    emailInput.addEventListener("input", function (event) {
-        if (!emailRegex.test(event.target.value)) {
-            emailErrorMsg.textContent = "Adresse e-mail non valide";
-        } else {
-            emailErrorMsg.textContent = "";
-        }
-    });
+    validateInput(emailRegex, emailInput, emailErrorMsg);
 }
-
-////////////////FIN => FORMULAIRE DE CONTACT REGEX\\\\\\\\\\\\\\\\\\\\\
-
-
+/********Fin RegExp********/
 
 
 //Bouton COMMANDER!
-
 let form = document.querySelector('.cart__order__form');
 if (form) {
     form.addEventListener('submit', function (event) {
@@ -346,7 +292,6 @@ if (form) {
 
 }
 
-
 //si panier vide message d'erreur indiquant à l'utilisateur d'ajouter un article dans le panier
 function submitBtnOrder() {
     let cart = recupBasket();
@@ -361,10 +306,10 @@ function submitBtnOrder() {
         }
         )
     }
-
 }
 submitBtnOrder();
 
+//envoie requête POST au serveur
 function postRequestSent(orderedUser) {
     fetch("http://localhost:3000/api/products/order", {
         method: "POST",
@@ -377,9 +322,11 @@ function postRequestSent(orderedUser) {
         .then(function (response) {
             return response.json();
         })
+        //récupère l'identifiant de la commande à partir de l'objet JSON renvoyé
         .then(function (data) {
             return data.orderId;
         })
+        //utilise l'identifiant de la commande pour générer un lien de confirmation et rediriger le client vers confirmation.html
         .then(function (orderId) {
             window.location.href = "confirmation.html?" + `id=${orderId}`;
             localStorage.clear();
@@ -391,7 +338,7 @@ function postRequestSent(orderedUser) {
         });
 }
 
-
+//récupération de l'id d'une commande à partir de l'url de la page puis l'affiche dans le dom
 function displayOrderId() {
     let url = new URL(window.location.href);
     let orderId = url.searchParams.get("id");

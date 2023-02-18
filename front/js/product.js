@@ -20,18 +20,15 @@ fetch('http://localhost:3000/api/products')
                 imgElem.alt = data[i].altTxt;
                 recupClassImg.appendChild(imgElem);
 
-
                 //affichage du name unique du produit
                 let nomProduit = document.querySelector('#title');
                 let h1Title = document.createTextNode(data[i].name);
                 nomProduit.appendChild(h1Title);
 
-
                 //affichage du prix unique du produit
                 let prixProduit = document.querySelector('#price');
                 let affichagePrixTxt = document.createTextNode(data[i].price);
                 prixProduit.appendChild(affichagePrixTxt);
-
 
                 //affichage de la description unique du produit
                 let descriptionProduit = document.querySelector('#description');
@@ -70,70 +67,44 @@ fetch('http://localhost:3000/api/products')
                         alert('Veuillez renseigner une quantité comprise entre 1 et 100 !');
                         window.location.reload();
                     } else {
-                        //ajout du produit dans le tableau "dynamique" -> cart
+                        //creation d'un objet pour récupérer l'id, quantité et la couleur
+                        const productLs = {
+                            id: idCart,
+                            quantity: Number(quantityCart),
+                            color: valueCart,
+                        };
+
+                        //ajout du produit au localstorage si les données sont correctement rempli
+                        let cart;
                         if (localStorage.getItem('panier')) {
-                            window.location.href = 'cart.html';
-                            let cart = JSON.parse(localStorage.getItem('panier'));
-
-                            //produit sous forme d'objet avec id, quantité, color
-                            let productLs = {
-                                id: idCart,
-                                quantity: Number(quantityCart),
-                                color: valueCart
-                            };
-                            let addNewItem = true;
-                            for (let produit of cart) {
-                                if (productLs.id == produit.id && productLs.color == produit.color) {
-                                    produit.quantity += productLs.quantity;
-                                    addNewItem = false;
-                                };
-                            }
-                            if (addNewItem == true) {
-                                cart.push(productLs);
-                            };
-                            localStorage.setItem('panier', JSON.stringify(cart));
-
+                            cart = JSON.parse(localStorage.getItem('panier'));
                         } else {
-                            window.location.href = 'cart.html';
-
-                            //tableau vide par défaut
-                            let cart = [];
-
-                            //produit sous forme d'objet avec id, quantité, color
-                            let productLs = {
-                                id: idCart,
-                                quantity: Number(quantityCart),
-                                color: valueCart
-                            };
-                            let addNewItem = true;
-                            for (let produit of cart) {
-                                if (productLs.id == produit.id && productLs.color == produit.color) {
-                                    produit.quantity += productLs.quantity;
-                                    addNewItem = false;
-                                };
-                            }
-                            if (addNewItem == true) {
-                                cart.push(productLs);
-                            };
-                            localStorage.setItem('panier', JSON.stringify(cart));
+                            cart = [];
                         }
+                        let addNewItem = true;
+                        for (let i = 0; i < cart.length; i++) {
+                            if (productLs.id === cart[i].id && productLs.color === cart[i].color) {
+                                cart[i].quantity += productLs.quantity;
+                                addNewItem = false;
+                            }
+                        }
+                        if (addNewItem) {
+                            cart.push(productLs);
+                        }
+                        localStorage.setItem('panier', JSON.stringify(cart));
+                        window.location.href = 'cart.html';
                     }
-                }
-                );
+                });
             }
         }
-    })
-    .catch(function (err) {
-        //si api éteint ou refus de connexion une boîte de dialogue apparaît avec un message d'erreur
-        alert(err);
-
-        err = 'Oups... Veuillez réessayer plus tard !';
-        let classTitles = document.querySelector('.titles');
-        let pElemerr = document.createElement('p');
-        let pTxt = document.createTextNode(err);
-
+    }
+    )
+    .catch((error) => {
+        const err = 'Oups... Veuillez réessayer plus tard !';
+        const classTitles = document.querySelector('.titles');
+        const pElemerr = document.createElement('p');
+        pElemerr.textContent = err;
         classTitles.appendChild(pElemerr);
-        pElemerr.appendChild(pTxt);
-
         document.querySelector('p').style.textAlign = 'center';
-    });
+        alert(error);
+    })

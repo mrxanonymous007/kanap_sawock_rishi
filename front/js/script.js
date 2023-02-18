@@ -6,12 +6,11 @@ fetch("http://localhost:3000/api/products")
     })
     .then(function (data) {
         //renvoie d'une nouvelle promesse, on récupère le résultat de la promesse du dessus
-        // console.log(data);
+
         //mettre une boucle for avec incrémentation +1
         for (let i = 0; i < data.length; i++) {
 
             let itemsSection = document.querySelector('.items');
-            // console.log(itemsSection);
 
             //creation de l'element a avec pour attribut href
             let aElem = document.createElement('a');
@@ -41,17 +40,12 @@ fetch("http://localhost:3000/api/products")
             articleElem.appendChild(pElem); /*RATTACHEMENT DE p À article*/
         }
     })
-    .catch(function (err) {
-        //si api éteint ou refus de connexion une boîte de dialogue apparaît avec un message d'erreur
-        alert(err);
-
-        err = 'Oups... Veuillez réessayer plus tard !';
-        let classTitles = document.querySelector('.titles');
-        let pElemerr = document.createElement('p');
-        let pTxt = document.createTextNode(err);
-
+    .catch((error) => {
+        const err = 'Oups... Veuillez réessayer plus tard !';
+        const classTitles = document.querySelector('.titles');
+        const pElemerr = document.createElement('p');
+        pElemerr.textContent = err;
         classTitles.appendChild(pElemerr);
-        pElemerr.appendChild(pTxt);
-
         document.querySelector('p').style.textAlign = 'center';
-    });
+        alert(error);
+    })
