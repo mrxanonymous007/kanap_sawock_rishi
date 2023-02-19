@@ -8,11 +8,8 @@ fetch('http://localhost:3000/api/products')
         return response.json()
     })
     .then(function (data) {
-        //    console.log(data);
         for (let i = 0; i < data.length; i++) {
-
             if (url == data[i]._id) {
-
                 //affichage d'une image unique du produit
                 let recupClassImg = document.querySelector('.item__img');
                 let imgElem = document.createElement('img');

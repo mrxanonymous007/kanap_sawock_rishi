@@ -9,7 +9,6 @@ fetch("http://localhost:3000/api/products")
 
         //mettre une boucle for avec incrémentation +1
         for (let i = 0; i < data.length; i++) {
-
             let itemsSection = document.querySelector('.items');
 
             //creation de l'element a avec pour attribut href
