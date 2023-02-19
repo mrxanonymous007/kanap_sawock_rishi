@@ -72,12 +72,8 @@ fetch('http://localhost:3000/api/products')
                         };
 
                         //ajout du produit au localstorage si les données sont correctement rempli
-                        let cart;
-                        if (localStorage.getItem('panier')) {
-                            cart = JSON.parse(localStorage.getItem('panier'));
-                        } else {
-                            cart = [];
-                        }
+                        let panier = localStorage.getItem('panier');
+                        let cart = panier ? JSON.parse(panier) : [];
                         let addNewItem = true;
                         for (let i = 0; i < cart.length; i++) {
                             if (productLs.id === cart[i].id && productLs.color === cart[i].color) {
@@ -97,11 +93,10 @@ fetch('http://localhost:3000/api/products')
     }
     )
     .catch((error) => {
+        window.location.href = 'index.html';
         const err = 'Oups... Veuillez réessayer plus tard !';
-        const classTitles = document.querySelector('.titles');
+        const classTitles = document.querySelector('.item');
         const pElemerr = document.createElement('p');
         pElemerr.textContent = err;
         classTitles.appendChild(pElemerr);
-        document.querySelector('p').style.textAlign = 'center';
-        alert(error);
     })

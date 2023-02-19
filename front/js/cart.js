@@ -10,6 +10,8 @@ fetch('http://localhost:3000/api/products')
         deleteItem();
         localQtyUpdate();
         displayPrxEtQty(cart, apiData);
+        validateForm();
+        submitBtnOrder();
     })
     .catch(function (err) {
         err = 'Panier vide...'
@@ -185,13 +187,13 @@ function localQtyUpdate() {
                         product.quantity = parseInt(modifyQty.value);
                         localStorage.setItem('panier', JSON.stringify(cart));
                         displayPrxEtQty(cart, apiData)
-                        alert('Limite autorisé 1-100.')
+                        alert('Minimum d\'article autorisé : 1')
                     } else if (modifyQty.value > 100) {
                         modifyQty.value = 100;
                         product.quantity = parseInt(modifyQty.value);
                         localStorage.setItem('panier', JSON.stringify(cart));
                         displayPrxEtQty(cart, apiData)
-                        alert('Limite autorisé 1-100.')
+                        alert('Maximum d\'articles autorisé : 100')
                     } else {
                         product.quantity = parseInt(modifyQty.value);
                         localStorage.setItem('panier', JSON.stringify(cart));
@@ -217,47 +219,48 @@ function validateInput(regex, input, errorMsg) {
     });
 }
 
-// regexp firstName
-const firstNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
-const firstNameInput = document.getElementById("firstName");
-const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-if (firstNameInput) {
-    validateInput(firstNameRegex, firstNameInput, firstNameErrorMsg);
-}
+function validateForm() {
+    // regexp firstName
+    const firstNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
+    const firstNameInput = document.getElementById("firstName");
+    const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+    if (firstNameInput) {
+        validateInput(firstNameRegex, firstNameInput, firstNameErrorMsg);
+    }
 
-//regexp lastName
-const lastNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
-const lastNameInput = document.getElementById("lastName");
-const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-if (lastNameInput) {
-    validateInput(lastNameRegex, lastNameInput, lastNameErrorMsg);
-}
+    //regexp lastName
+    const lastNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
+    const lastNameInput = document.getElementById("lastName");
+    const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+    if (lastNameInput) {
+        validateInput(lastNameRegex, lastNameInput, lastNameErrorMsg);
+    }
 
-//regexp address
-const addressRegex = new RegExp(/^\d+(,\s*)?\s[a-z-A-Z\u00C0-\u017F\s']+$/);
-const addressInput = document.getElementById("address");
-const addressErrorMsg = document.getElementById("addressErrorMsg");
-if (addressInput) {
-    validateInput(addressRegex, addressInput, addressErrorMsg);
-}
+    //regexp address
+    const addressRegex = new RegExp(/^\d+(,\s*)?\s[a-z-A-Z\u00C0-\u017F\s']+$/);
+    const addressInput = document.getElementById("address");
+    const addressErrorMsg = document.getElementById("addressErrorMsg");
+    if (addressInput) {
+        validateInput(addressRegex, addressInput, addressErrorMsg);
+    }
 
-//regexp city
-const cityRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
-const cityInput = document.getElementById("city");
-const cityErrorMsg = document.getElementById("cityErrorMsg");
-if (cityInput) {
-    validateInput(cityRegex, cityInput, cityErrorMsg);
-}
+    //regexp city
+    const cityRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
+    const cityInput = document.getElementById("city");
+    const cityErrorMsg = document.getElementById("cityErrorMsg");
+    if (cityInput) {
+        validateInput(cityRegex, cityInput, cityErrorMsg);
+    }
 
-//regexp email
-const emailRegex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
-const emailInput = document.getElementById("email");
-const emailErrorMsg = document.getElementById("emailErrorMsg");
-if (emailInput) {
-    validateInput(emailRegex, emailInput, emailErrorMsg);
+    //regexp email
+    const emailRegex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
+    const emailInput = document.getElementById("email");
+    const emailErrorMsg = document.getElementById("emailErrorMsg");
+    if (emailInput) {
+        validateInput(emailRegex, emailInput, emailErrorMsg);
+    }
+    /********Fin RegExp********/
 }
-/********Fin RegExp********/
-
 
 //Bouton COMMANDER!
 let form = document.querySelector('.cart__order__form');
@@ -280,12 +283,11 @@ if (form) {
                 products.push(product.id);
             }
 
-            //création d'un tableau réunissant les formulaire de contact et des infos des produits
+            //création d'un objet réunissant le formulaire de contact et des infos des produits
             let orderedUser = {
                 contact: contactForm,
                 products: products
             };
-            console.log(orderedUser);
             postRequestSent(orderedUser)
         }
     });
@@ -307,7 +309,6 @@ function submitBtnOrder() {
         )
     }
 }
-submitBtnOrder();
 
 //envoie requête POST au serveur
 function postRequestSent(orderedUser) {
@@ -333,8 +334,8 @@ function postRequestSent(orderedUser) {
             displayOrderId();
             return orderId;
         })
-        .catch(function (error) {
-            console.log(error);
+        .catch((error) => {
+            window.location.href = 'index.html';
         });
 }
 
