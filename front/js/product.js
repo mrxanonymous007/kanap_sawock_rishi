@@ -93,10 +93,11 @@ fetch('http://localhost:3000/api/products')
     }
     )
     .catch((error) => {
-        window.location.href = 'index.html';
+        // window.location.href = 'index.html';
         const err = 'Oups... Veuillez réessayer plus tard !';
-        const classTitles = document.querySelector('.item');
+        const classTitles = document.querySelector('.item__img');
         const pElemerr = document.createElement('p');
         pElemerr.textContent = err;
+        pElemerr.style.textAlign = 'center';
         classTitles.appendChild(pElemerr);
     })

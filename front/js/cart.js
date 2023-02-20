@@ -15,7 +15,7 @@ fetch('http://localhost:3000/api/products')
     })
     .catch(function (err) {
         err = 'Panier vide...'
-        //condition pour afficher le msg si le ls est vide
+        //condition pour afficher le msg si le LS est vide
         if (localStorage.length == '') {
             let section = document.querySelector('#cart__items');
             let msgTxt = document.createElement('p');
@@ -25,6 +25,11 @@ fetch('http://localhost:3000/api/products')
                 msgTxt.appendChild(txtNode);
                 document.querySelector('p').style.textAlign = 'center';
             }
+        }
+
+        //redirection sur page accueil si serveur éteint
+        if ('http://localhost:3000/api/products') {
+            window.location.href = 'index.html';
         }
     });
 
