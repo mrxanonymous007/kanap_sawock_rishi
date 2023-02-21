@@ -224,7 +224,7 @@ function validateInput(regex, input, errorMsg) {
 
 function validateForm() {
     // regexp firstName
-    const firstNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
+    const firstNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\s']+)$/);
     const firstNameInput = document.getElementById("firstName");
     const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
     if (firstNameInput) {
@@ -232,7 +232,7 @@ function validateForm() {
     }
 
     //regexp lastName
-    const lastNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
+    const lastNameRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\s']+)$/);
     const lastNameInput = document.getElementById("lastName");
     const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
     if (lastNameInput) {
@@ -249,7 +249,7 @@ function validateForm() {
     }
 
     //regexp city
-    const cityRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\']+)$/);
+    const cityRegex = new RegExp(/^(?!.*\btest|bonjour|prenom|prénom|nom|adresse|email|e-mail\b)([A-Z-a-z\u00C0-\u017F\s']+)$/);
     const cityInput = document.getElementById("city");
     const cityErrorMsg = document.getElementById("cityErrorMsg");
     if (cityInput) {
