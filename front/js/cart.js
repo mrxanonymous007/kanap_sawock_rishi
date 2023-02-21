@@ -241,7 +241,7 @@ function validateForm() {
 
     //regexp address
     // const addressRegex = new RegExp(/^[a-z-A-Z\u00C0-\u017F\s']+$/);
-    const addressRegex = new RegExp(/^[0-9]{1,4}[a-z-A-Z\u00C0-\u017F\s']+$/);
+    const addressRegex = new RegExp(/^[0-9]{1,4}|,|[a-z-A-Z\u00C0-\u017F\s']+$/);
     const addressInput = document.getElementById("address");
     const addressErrorMsg = document.getElementById("addressErrorMsg");
     if (addressInput) {
