@@ -30,8 +30,7 @@ console when the server starts, e.g. `Listening on port 3001`.
 server runs on another port for any reason, this is printed to the
 console when the server starts, e.g. `Listening on port 3001`.
 
-![project-5](https://github.com/mrxanonymous007/site_ecommerce_front/assets/80334877/7a17b881-dc63-4a1c-9fe5-2250c40b13b0)
-
+![project-4](https://github.com/mrxanonymous007/site_ecommerce_front/assets/80334877/c04fba62-e381-43bb-b501-840297f74728)
 
 ## Contexte : 
 Kanap est une marque de canapés qui vend ses produits depuis sa boutique exclusivement. Aujourd’hui, celle-ci souhaiterait avoir une plateforme de e-commerce en plus de sa boutique physique pour vendre ses produits sur Internet.
